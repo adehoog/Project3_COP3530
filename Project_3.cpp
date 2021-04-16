@@ -28,7 +28,7 @@ void printPokemon(map<string, vector<string> > pokemon, string name) {
         cout << "Weight(kg): " << it->second[37] << endl;
     }
 
-} 
+}
 
 void printPokemon(unordered_map<string, vector<string> > pokemon, string name) {
 
@@ -50,11 +50,11 @@ void printPokemon(unordered_map<string, vector<string> > pokemon, string name) {
 }
 
 
-int main()
-{
-    ifstream ip("pokemon blanks replaced.csv");
+int main() {
+    ifstream ip;
+    ip.open("pokemon_blanks_replaced.csv", std::ifstream::in);
 
-    if (!ip.is_open()) cout << "ERROR: file is not open";
+    if (!ip.is_open()) cout << "ERROR: file is not open" << endl;
 
     map<string, vector<string> > mapPokemon;
     unordered_map<string, vector<string> > unorderedMapPokemon;
@@ -66,7 +66,7 @@ int main()
 
         vector<string> tempVector;
 
-            //40 colums in one row 
+            //40 colums in one row
             //name is inindex 30
             for (int j = 0; j < 40; j++) {
 
@@ -82,7 +82,7 @@ int main()
             mapPokemon[name] = tempVector;
             unorderedMapPokemon[name] = tempVector;
             tempVector.clear();
-        
+
     }
 
     //for (auto member : pokemon)
@@ -90,8 +90,21 @@ int main()
 
    // cout << "pokemon map size is: " << pokemon.size()<<endl;
     printPokemon(mapPokemon, "Bulbasaur");
+    cout << endl;
     printPokemon(unorderedMapPokemon, "Bulbasaur");
-
+    /*Mariana's code*/
+    /*1) cin pokemon name to get pokemon
+    2) create function that returns all names*/
+    bool searching = true;
+    string stop = ".";
+    string input = "";
+    while(searching) {
+      getline(cin, input); //the input string will be whatever the user types in the interface
+      if (input == stop) { //somehow connect this to search button
+        searching = false;
+      } else {
+        cout << input << " processed :)" << endl;
+      }
+    }
+    return 0;
 }
-
-
