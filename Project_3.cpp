@@ -15,8 +15,10 @@ void printPokemon(map<string, vector<string> > pokemon, tgui::EditBox::Ptr pokem
     tgui::String temp = pokemonName->getText();
     string name = temp.toStdString();
     display->removeAllLines();
-    if (pokemon.find(name) == pokemon.end())
+    if (pokemon.find(name) == pokemon.end()) {
         cout << "Pokemon not found" << endl;
+        display->addLine("Error: Pokemon not found. Please try again.");
+    }
     else {
         map<string, vector<string> >:: iterator it = pokemon.find(name);
 
@@ -32,6 +34,7 @@ void printPokemon(map<string, vector<string> > pokemon, tgui::EditBox::Ptr pokem
         display->addLine("Pokedex number: " + it->second[31]);
         display->addLine("Primary Type: " + it->second[35]);
         display->addLine("Secondary Type: " + it->second[36]);
+        display->addLine("Classification: " + it->second[24]);
         display->addLine("Height(m): " + it->second[27]);
         display->addLine("Weight(kg): " + it->second[37]);
     }
@@ -61,7 +64,7 @@ int main()
     bool textEntered = false;
 
     /** data structure setups **/
-    ifstream ip("pokemon_blanks_replaced.csv");
+    ifstream ip("pokemon blanks replaced.csv");
 
     if (!ip.is_open()) cout << "ERROR: file is not open";
 
@@ -105,6 +108,17 @@ int main()
     sf::Sprite pokedex;
     pokedex.setTexture(background);
     pokedex.scale(sf::Vector2f(1.5f, 1.5f));
+
+    /** instructions **/
+    auto instructions = tgui::ChatBox::create();
+    instructions->setSize(250, 250);
+    instructions->setTextSize(15);
+    instructions->setPosition(470, 200);
+    instructions->setLinesStartFromTop();
+    instructions->addLine("Welcome to our data structures final project!");
+    instructions->addLine("Enter a Pokemon name into the search bar and press enter.");
+    instructions->addLine("Make sure to capitalize the first letter of the Pokemon's name and spell it correctly or the search will not work properly!");
+    gui.add(instructions);
 
     /** search bar **/
     auto searchBar = tgui::EditBox::create();
