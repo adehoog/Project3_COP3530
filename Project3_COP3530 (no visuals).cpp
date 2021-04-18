@@ -8,6 +8,9 @@
 using namespace std;
 
 void printPokemon(map<string, vector<string> > pokemon, string name) {
+   
+    auto start = high_resolution_clock::now();
+    
     if (pokemon.find(name) == pokemon.end())
         cout << "Pokemon not found" << endl;
     else {
@@ -21,11 +24,19 @@ void printPokemon(map<string, vector<string> > pokemon, string name) {
         cout << "Height(m): " << it->second[27] << endl;
         cout << "Weight(kg): " << it->second[37] << endl;
     }
+    auto stop = high_resolution_clock::now();
+
+    auto duration = duration_cast<microseconds>(stop - start);
+
+    cout << "Time taken by function: "
+        << duration.count() << " microseconds" << endl;
 
 }
 
 void printPokemon(unordered_map<string, vector<string> > pokemon, string name) {
 
+    auto start = high_resolution_clock::now();
+    
     if (pokemon.find(name) == pokemon.end())
         cout << "Pokemon not found" << endl;
     else {
@@ -39,7 +50,12 @@ void printPokemon(unordered_map<string, vector<string> > pokemon, string name) {
         cout << "Height(m): " << it->second[27] << endl;
         cout << "Weight(kg): " << it->second[37] << endl;
     }
+    auto stop = high_resolution_clock::now();
 
+    auto duration = duration_cast<microseconds>(stop - start);
+
+    cout << "Time taken by function: "
+        << duration.count() << " microseconds" << endl;
 }
 
 int main() {
