@@ -21,7 +21,6 @@ void printPokemon(map<string, vector<string> > pokemon, tgui::EditBox::Ptr pokem
         map<string, vector<string> >:: iterator it = pokemon.find(name);
 
         cout << "Name: " << it->first << endl;
-        cout << "Japanese name: " << it->second[29] << endl;
         cout << "Pokedex number: " << it->second[31] << endl;
         cout << "Primary Type: " << it->second[35] << endl;
         cout << "Secondary Type: " << it->second[36] << endl;
@@ -30,7 +29,6 @@ void printPokemon(map<string, vector<string> > pokemon, tgui::EditBox::Ptr pokem
         cout << "Weight(kg): " << it->second[37] << endl;
 
         display->addLine("Name: " + it->first);
-        display->addLine("Japanese name: " + it->second[29]);
         display->addLine("Pokedex number: " + it->second[31]);
         display->addLine("Primary Type: " + it->second[35]);
         display->addLine("Secondary Type: " + it->second[36]);
@@ -48,7 +46,6 @@ void printPokemon(unordered_map<string, vector<string> > pokemon, string name) {
         unordered_map<string, vector<string> >::iterator it = pokemon.find(name);
 
         cout << "Name: " << it->first << endl;
-        cout << "Japanese name: " << it->second[29] << endl;
         cout << "Pokedex number: " << it->second[31] << endl;
         cout << "Primary Type: " << it->second[35] << endl;
         cout << "Secondary Type: " << it->second[36] << endl;
