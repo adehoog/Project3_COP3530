@@ -14,7 +14,6 @@ void printPokemon(map<string, vector<string> > pokemon, string name) {
         map<string, vector<string> >:: iterator it = pokemon.find(name);
 
         cout << "Name: " << it->first << endl;
-        cout << "Japanese name: " << it->second[29] << endl;
         cout << "Pokedex number: " << it->second[31] << endl;
         cout << "Primary Type: " << it->second[35] << endl;
         cout << "Secondary Type: " << it->second[36] << endl;
@@ -33,7 +32,6 @@ void printPokemon(unordered_map<string, vector<string> > pokemon, string name) {
         unordered_map<string, vector<string> >::iterator it = pokemon.find(name);
 
         cout << "Name: " << it->first << endl;
-        cout << "Japanese name: " << it->second[29] << endl;
         cout << "Pokedex number: " << it->second[31] << endl;
         cout << "Primary Type: " << it->second[35] << endl;
         cout << "Secondary Type: " << it->second[36] << endl;
