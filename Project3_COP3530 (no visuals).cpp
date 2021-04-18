@@ -46,7 +46,7 @@ int main() {
     bool textEntered = false;
 
     /** data structure setups **/
-    ifstream ip("pokemon_blanks_replaced.csv");
+    ifstream ip("pokemon blanks replaced.csv");
 
     if (!ip.is_open()) cout << "ERROR: file is not open";
 
