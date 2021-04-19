@@ -5,23 +5,23 @@
 #include <fstream>
 #include <string>
 #include <unordered_map>
-#include<map>
+#include <map>
 #include <vector>
 #include <TGUI/TGUI.hpp>
 #include <chrono>
+#include <locale>
 
 using namespace std;
 
-string formatString(string input){
+string formatString(string input) {
     /** formats pokemon input so first letter is upper and rest is lower **/
     //makes the whole input lowercase
-    locale inputLoc;
+    locale loc;
     for (size_t i = 0; i < input.length(); i++) {
-        input[i] = tolower(input[i], inputLoc);
+        input[i] = tolower(input[i], loc);
     }
     //capitalizes the first letter so it can find the name correctly
-    locale lowercaseLoc;
-    input[0] = toupper(input[0], lowercaseLoc);
+    input[0] = toupper(input[0], loc);
     return input;
 }
 
@@ -60,7 +60,7 @@ void printPokemon(map<string, vector<string> > pokemon, tgui::EditBox::Ptr pokem
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop-start);
     cout << "Efficiency: " << duration.count() << " microseconds" << endl;
     eff->addLine("Efficiency: " + to_string(duration.count()) + + " microseconds");
-} 
+}
 
 void printPokemon(unordered_map<string, vector<string> > pokemon, tgui::EditBox::Ptr pokemonName, tgui::ChatBox::Ptr& display, tgui::ChatBox::Ptr& eff) {
     tgui::String temp = pokemonName->getText();
@@ -98,8 +98,7 @@ void printPokemon(unordered_map<string, vector<string> > pokemon, tgui::EditBox:
     eff->addLine("Efficiency: " + to_string(duration.count()) + + " microseconds");
 }
 
-int main()
-{
+int main() {
     bool textEntered = false;
     string mode = "none";
 
@@ -114,27 +113,22 @@ int main()
     string temp;
 
     //802 rows
-    for(int i = 0; i< 802; i++) {
-
-        vector<string> tempVector;
-
-            //40 colums in one row 
-            //name is inindex 30
-            for (int j = 0; j < 40; j++) {
-
-                if (j == 30) {
-                    getline(ip, name, ',');
-
-                }
-                else {
-                    getline(ip, temp, ',');
-                    tempVector.push_back(temp);
-                }
-            }
-            mapPokemon[name] = tempVector;
-            unorderedMapPokemon[name] = tempVector;
-            tempVector.clear();
-        
+    for (int i = 0; i < 802; i++) {
+      vector<string> tempVector;
+      //40 colums in one row
+      //name is inindex 30
+      for (int j = 0; j < 40; j++) {
+        if (j == 30) {
+          getline(ip, name, ',');
+        }
+        else {
+          getline(ip, temp, ',');
+          tempVector.push_back(temp);
+        }
+      }
+      mapPokemon[name] = tempVector;
+      unorderedMapPokemon[name] = tempVector;
+      tempVector.clear();
     }
 
     /** window setup**/
@@ -206,39 +200,37 @@ int main()
     gui.add(efficiency);
 
     /** window loop **/
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            gui.handleEvent(event);
+    while (window.isOpen()) {
+      sf::Event event;
+      while (window.pollEvent(event)) {
+        gui.handleEvent(event);
 
-            if (event.type == sf::Event::Closed)
-                window.close();
+        if (event.type == sf::Event::Closed)
+          window.close();
+      }
+
+      window.clear();
+
+      window.draw(pokedex);
+      if (textEntered) {
+        if (mode == "none") {
+          pokemonInfo->removeAllLines();
+          pokemonInfo->addLine("Please enter a pokemon and select map or unordered map");
+          textEntered = false;
         }
-
-        window.clear();
-
-        window.draw(pokedex);
-        if(textEntered){
-            if(mode == "none"){
-                pokemonInfo->removeAllLines();
-                pokemonInfo->addLine("Please enter a pokemon and select map or unordered map");
-                textEntered = false;
-            }
-            else{
-                if(mode == "map"){
-                    printPokemon(mapPokemon, searchBar, pokemonInfo, efficiency);
-                    textEntered = false;
-                }
-                else{ //unordered map
-                    printPokemon(unorderedMapPokemon, searchBar, pokemonInfo, efficiency);
-                    textEntered = false;
-                }
-            }
+        else {
+          if (mode == "map") {
+            printPokemon(mapPokemon, searchBar, pokemonInfo, efficiency);
+            textEntered = false;
+          }
+          else { //unordered map
+            printPokemon(unorderedMapPokemon, searchBar, pokemonInfo, efficiency);
+            textEntered = false;
+          }
         }
-        gui.draw();
+      }
+      gui.draw();
 
-        window.display();
+      window.display();
     }
 }
