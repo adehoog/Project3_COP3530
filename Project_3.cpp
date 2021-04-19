@@ -8,13 +8,31 @@
 #include<map>
 #include <vector>
 #include <TGUI/TGUI.hpp>
+#include <chrono>
 
 using namespace std;
 
-void printPokemon(map<string, vector<string> > pokemon, tgui::EditBox::Ptr pokemonName, tgui::ChatBox::Ptr& display) {
+string formatString(string input){
+    /** formats pokemon input so first letter is upper and rest is lower **/
+    //makes the whole input lowercase
+    locale inputLoc;
+    for (size_t i = 0; i < input.length(); i++) {
+        input[i] = tolower(input[i], inputLoc);
+    }
+    //capitalizes the first letter so it can find the name correctly
+    locale lowercaseLoc;
+    input[0] = toupper(input[0], lowercaseLoc);
+    return input;
+}
+
+void printPokemon(map<string, vector<string> > pokemon, tgui::EditBox::Ptr pokemonName, tgui::ChatBox::Ptr& display, tgui::ChatBox::Ptr& eff) {
     tgui::String temp = pokemonName->getText();
-    string name = temp.toStdString();
+    string name = formatString(temp.toStdString());
     display->removeAllLines();
+    eff->removeAllLines();
+
+    auto start = std::chrono::high_resolution_clock::now();
+
     if (pokemon.find(name) == pokemon.end()) {
         cout << "Pokemon not found" << endl;
         display->addLine("Error: Pokemon not found. Please try again.");
@@ -38,13 +56,24 @@ void printPokemon(map<string, vector<string> > pokemon, tgui::EditBox::Ptr pokem
         display->addLine("Height(m): " + it->second[27]);
         display->addLine("Weight(kg): " + it->second[37]);
     }
-
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop-start);
+    cout << "Efficiency: " << duration.count() << " microseconds" << endl;
+    eff->addLine("Efficiency: " + to_string(duration.count()) + + " microseconds");
 } 
 
-void printPokemon(unordered_map<string, vector<string> > pokemon, string name) {
+void printPokemon(unordered_map<string, vector<string> > pokemon, tgui::EditBox::Ptr pokemonName, tgui::ChatBox::Ptr& display, tgui::ChatBox::Ptr& eff) {
+    tgui::String temp = pokemonName->getText();
+    string name = formatString(temp.toStdString());
+    display->removeAllLines();
+    eff->removeAllLines();
 
-    if (pokemon.find(name) == pokemon.end())
+    auto start = std::chrono::high_resolution_clock::now();
+
+    if (pokemon.find(name) == pokemon.end()) {
         cout << "Pokemon not found" << endl;
+        display->addLine("Error: Pokemon not found. Please try again.");
+    }
     else {
         unordered_map<string, vector<string> >::iterator it = pokemon.find(name);
 
@@ -55,13 +84,24 @@ void printPokemon(unordered_map<string, vector<string> > pokemon, string name) {
         cout << "Classification: " << it->second[24] << endl;
         cout << "Height(m): " << it->second[27] << endl;
         cout << "Weight(kg): " << it->second[37] << endl;
+        display->addLine("Name: " + it->first);
+        display->addLine("Pokedex number: " + it->second[31]);
+        display->addLine("Primary Type: " + it->second[35]);
+        display->addLine("Secondary Type: " + it->second[36]);
+        display->addLine("Classification: " + it->second[24]);
+        display->addLine("Height(m): " + it->second[27]);
+        display->addLine("Weight(kg): " + it->second[37]);
     }
-
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop-start);
+    cout << "Efficiency: " << duration.count() << " microseconds" << endl;
+    eff->addLine("Efficiency: " + to_string(duration.count()) + + " microseconds");
 }
 
 int main()
 {
     bool textEntered = false;
+    string mode = "none";
 
     /** data structure setups **/
     ifstream ip("pokemon blanks replaced.csv");
@@ -113,11 +153,11 @@ int main()
     auto instructions = tgui::ChatBox::create();
     instructions->setSize(250, 250);
     instructions->setTextSize(15);
-    instructions->setPosition(470, 200);
+    instructions->setPosition(470, 250);
     instructions->setLinesStartFromTop();
     instructions->addLine("Welcome to our data structures final project!");
-    instructions->addLine("Enter a Pokemon name into the search bar and press enter.");
-    instructions->addLine("Make sure to capitalize the first letter of the Pokemon's name and spell it correctly or the search will not work properly!");
+    instructions->addLine("First, select to search with a map mode or an unordered map.");
+    instructions->addLine("Then, enter a Pokemon name into the search bar and press search.");
     gui.add(instructions);
 
     /** search bar **/
@@ -135,6 +175,20 @@ int main()
     button->onPress([=, &textEntered]{textEntered = true;});
     gui.add(button);
 
+    /** mode buttons **/
+    auto mapMode = tgui::RadioButton::create();
+    mapMode->setSize(25, 25);
+    mapMode->setText("Map");
+    mapMode->setPosition(470, 210);
+    mapMode->onCheck([=, &mode]{mode = "map";});
+    gui.add(mapMode);
+    auto unmapMode = tgui::RadioButton::create();
+    unmapMode->setSize(25, 25);
+    unmapMode->setText("Unordered Map");
+    unmapMode->setPosition(550, 210);
+    unmapMode->onCheck([=, &mode]{mode = "unmap";});
+    gui.add(unmapMode);
+
     /** Pokemon info **/
     tgui::ChatBox::Ptr pokemonInfo = tgui::ChatBox::create();
     pokemonInfo->setSize(315, 320);
@@ -143,6 +197,13 @@ int main()
     pokemonInfo->setLinesStartFromTop();
     gui.add(pokemonInfo);
 
+    /** efficiency **/
+    tgui::ChatBox::Ptr efficiency = tgui::ChatBox::create();
+    efficiency->setSize(315, 50);
+    efficiency->setTextSize(15);
+    efficiency->setPosition(30, 300);
+    efficiency->setLinesStartFromTop();
+    gui.add(efficiency);
 
     /** window loop **/
     while (window.isOpen())
@@ -160,8 +221,21 @@ int main()
 
         window.draw(pokedex);
         if(textEntered){
-            printPokemon(mapPokemon, searchBar, pokemonInfo);
-            textEntered = false;
+            if(mode == "none"){
+                pokemonInfo->removeAllLines();
+                pokemonInfo->addLine("Please enter a pokemon and select map or unordered map");
+                textEntered = false;
+            }
+            else{
+                if(mode == "map"){
+                    printPokemon(mapPokemon, searchBar, pokemonInfo, efficiency);
+                    textEntered = false;
+                }
+                else{ //unordered map
+                    printPokemon(unorderedMapPokemon, searchBar, pokemonInfo, efficiency);
+                    textEntered = false;
+                }
+            }
         }
         gui.draw();
 
