@@ -14,20 +14,20 @@ _CMAKE FILE:_
 
 cmake_minimum_required(VERSION 3.2)
 
-project(tguiTest)
+project(Project3_COP3530)
 
 set(CMAKE_CXX_STANDARD 11)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(tguiTest main.cpp)
+add_executable(Project3_COP3530 Project_3.cpp)
 
 set(SFML_DIR ".../SFML-2.5.1/lib/cmake/SFML") //make sure to include the exact file location
 
-set(TGUI_DIR ".../TGUI-0.9/lib/cmake/TGUI")
+set(TGUI_DIR ".../TGUI-0.9/lib/cmake/TGUI") //make sure to include the exact file location
 
 find_package(SFML REQUIRED COMPONENTS system window graphics network audio)
 
 find_package(TGUI REQUIRED COMPONENTS backends loading renders widgets)
 
-target_link_libraries(tguiTest PRIVATE tgui sfml-graphics)
+target_link_libraries(Project3_COP3530 PRIVATE tgui sfml-graphics)
