@@ -122,7 +122,7 @@ int main() {
 
     void filterByName(map<string, vector<string>> map, string str);
     string pokemon;
-    /*string loop = "y";
+    string loop = "y";
 
     while(loop == "y"){
         cout << "Please enter a pokemon name: " << endl;
