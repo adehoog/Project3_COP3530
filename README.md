@@ -1,4 +1,4 @@
-# Project3_COP3530
+# Project3_COP3530 file is the one with the final code for the project
 
 #GUI used: SFML 2.5.1 (https://www.sfml-dev.org/download/sfml/2.5.1/) with TGUI 0.9.1 (https://tgui.eu/download/)
 #Comiplier MnGW (https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download)
